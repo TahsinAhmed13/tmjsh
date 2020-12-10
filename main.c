@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <sys/wait.h>
+#include <errno.h>
 
 #include "shell.h"
 
@@ -17,22 +18,31 @@ int main()
     {
         printf("$ "); 
 
-        if(!fgets(cmd, sizeof(cmd), stdin)) continue; 
+        if(!fgets(cmd, sizeof(cmd), stdin)) 
+            continue;
         char *line = strchr(cmd, '\n'); 
-        if(line) *line = 0; 
+        if(line) *line = 0;
 
         argsv = parse_args(cmd);  
-        if(!strcmp(argsv[0], "exit"))   
+        if(!argsv[0])
+            continue; 
+        else if(!strcmp(argsv[0], "exit"))   
             break;                                                                                                                                                                         
         else if(!strcmp(argsv[0], "cd"))
             if(argsv[1])    chdir(argsv[1]); 
-            // TODO: figure out how to get the home directory
             else            chdir("/"); 
-        
-        f = fork(); 
-        if(f)   wait(&status); 
-        else    execvp(argsv[0], argsv); 
-        
+        else 
+        {
+            f = fork(); 
+            if(f)   wait(&status); 
+            else    
+            {
+                execvp(argsv[0], argsv); 
+                printf("%s\n", strerror(errno));
+                return 0;
+            }
+        }        
+
         free(argsv); 
     }
     
