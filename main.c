@@ -6,17 +6,22 @@
 #include <errno.h>
 
 #include "shell.h"
+#include "color.h"
 
 int main()
 {
     int f; 
     int status;
+    char cwd[80]; 
     char cmd[256]; 
     char **argsv; 
 
+    getcwd(cwd, sizeof(cwd)); 
     while(1) 
     {
-        printf("$ "); 
+        // TODO: allow users to set colors
+        printf("%s%s\n", ANSI_GREEN, cwd); 
+        printf("%s->%s ", ANSI_YELLOW, ANSI_RESET); 
 
         if(!fgets(cmd, sizeof(cmd), stdin)) 
             continue;
@@ -29,8 +34,12 @@ int main()
         else if(!strcmp(argsv[0], "exit"))   
             break;                                                                                                                                                                         
         else if(!strcmp(argsv[0], "cd"))
+        {
             if(argsv[1])    chdir(argsv[1]); 
-            else            chdir("/"); 
+            // TODO: find a better way to do this
+            else            chdir(getenv("HOME")); 
+            getcwd(cwd, sizeof(cwd)); 
+        }
         else 
         {
             f = fork(); 
@@ -38,12 +47,13 @@ int main()
             else    
             {
                 execvp(argsv[0], argsv); 
-                printf("%s\n", strerror(errno));
+                printf("tmjsh:\t%d:\t%s\n", errno, strerror(errno));
                 return 0;
             }
         }        
 
         free(argsv); 
+        printf("\n"); 
     }
     
     return 0; 

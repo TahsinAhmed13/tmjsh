@@ -1,7 +1,7 @@
 main: main.o shell.o
 	gcc -o tmjsh main.o shell.o
 
-main.o: main.c shell.h
+main.o: main.c shell.h color.h
 	gcc -c main.c
 
 shell.o: shell.c shell.h

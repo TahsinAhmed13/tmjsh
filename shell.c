@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 
-int strspace(char *str)
+int num_args(char *str)
 {
     if(!(*str)) return 0; 
     int s = 0; 
@@ -12,13 +12,13 @@ int strspace(char *str)
         if(*str == ' ' && *(str-1) != ' ') ++s;
         ++str;
     }
-    if(*(str-1) == ' ') --s; 
-    return s + 1;
+    if(*(str-1) != ' ') ++s; 
+    return s;
 }
 
 char **parse_args(char *argsc)
 {
-    int s = strspace(argsc);
+    int s = num_args(argsc);
     char ** argsv = (char **) malloc((s+1) * sizeof(char *));
 
     int i = 0;
