@@ -1,1 +1,1 @@
-char **parse_args(char *);
+char *get_prompt(); 

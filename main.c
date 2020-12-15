@@ -1,60 +1,65 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <string.h>
-#include <sys/wait.h>
+#include <unistd.h>
 #include <errno.h>
+#include <sys/wait.h>
 
+#include "parse.h"
 #include "shell.h"
-#include "color.h"
+
+#define CMD_SIZE 256
 
 int main()
 {
-    int f; 
-    int status;
-    char cwd[80]; 
-    char cmd[256]; 
-    char **argsv; 
+    int proc; 
+    int status; 
+    char buffer[CMD_SIZE]; 
+    char *cmd = NULL; 
 
-    getcwd(cwd, sizeof(cwd)); 
-    while(1) 
+    while(1)
     {
-        // TODO: allow users to set colors
-        printf("%s%s\n", ANSI_GREEN, cwd); 
-        printf("%s->%s ", ANSI_YELLOW, ANSI_RESET); 
-
-        if(!fgets(cmd, sizeof(cmd), stdin)) 
-            continue;
-        char *line = strchr(cmd, '\n'); 
-        if(line) *line = 0;
-
-        argsv = parse_args(cmd);  
-        if(!argsv[0])
-            continue; 
-        else if(!strcmp(argsv[0], "exit"))   
-            break;                                                                                                                                                                         
-        else if(!strcmp(argsv[0], "cd"))
+        if(!cmd)    // no command in buffer
         {
-            if(argsv[1])    chdir(argsv[1]); 
-            // TODO: find a better way to do this
-            else            chdir(getenv("HOME")); 
-            getcwd(cwd, sizeof(cwd)); 
+            printf("\n%s ", get_prompt());  
+            fgets(buffer, CMD_SIZE, stdin);  
+            if(strchr(buffer, '\n'))
+                *strchr(buffer, '\n') = 0; 
+            cmd = buffer; 
         }
+
+        // save next command for later
+        char * next = cmd; 
+        cmd = strsep(&next, ";"); 
+
+        // setup redirection stream
+        int save = redirect(cmd); 
+
+        // parse and execute 
+        char ** argsv = parse_args(cmd); 
+        if(!strcmp(argsv[0], "exit"))
+            return 0; 
         else 
         {
-            f = fork(); 
-            if(f)   wait(&status); 
-            else    
+            proc = fork(); 
+            if(proc)
+                // parent
+                wait(&status); 
+            else 
             {
+                // child
                 execvp(argsv[0], argsv); 
-                printf("tmjsh:\t%d:\t%s\n", errno, strerror(errno));
-                return 0;
+                printf("tmjsh:\t%s:\t%s\n", argsv[0], "command not found"); 
+                return 0; 
             }
-        }        
-
+        }
         free(argsv); 
-        printf("\n"); 
+
+        // undo redirection stream
+        reset(save); 
+
+        // handle next command 
+        cmd = next; 
     }
-    
     return 0; 
 }

@@ -1,0 +1,9 @@
+total 44
+-rw-r--r-- 1 tahsin tahsin  1385 Dec 15 18:42 main.c
+-rw-r--r-- 1 tahsin tahsin   252 Dec 15 18:10 Makefile
+-rw-r--r-- 1 tahsin tahsin  1226 Dec 15 18:40 parse.c
+-rw-r--r-- 1 tahsin tahsin    70 Dec 15 18:32 parse.h
+-rw-r--r-- 1 tahsin tahsin    81 Dec 15 18:09 shell.c
+-rw-r--r-- 1 tahsin tahsin    21 Dec 15 17:56 shell.h
+-rw-r--r-- 1 tahsin tahsin     0 Dec 15 18:44 test
+-rwxr-xr-x 1 tahsin tahsin 17744 Dec 15 18:43 tmjsh
