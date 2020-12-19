@@ -1,4 +1,3 @@
-char ** parse_args(char *); 
+char * trim(char *str); 
 
-int redirect(char *);
-void reset(int); 
+char ** parse_args(char *); 

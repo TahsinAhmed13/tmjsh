@@ -33,10 +33,11 @@ int main()
         cmd = strsep(&next, ";"); 
 
         // setup redirection stream
-        int save = redirect(cmd); 
+        int save_out = redirect_out(cmd); 
+        int save_in = redirect_in(cmd); 
 
         // parse and execute 
-        char ** argsv = parse_args(cmd); 
+        char ** argsv = parse_args(cmd);
         if(!strcmp(argsv[0], "exit"))
             return 0; 
         else 
@@ -56,7 +57,8 @@ int main()
         free(argsv); 
 
         // undo redirection stream
-        reset(save); 
+        dup2(save_out, STDOUT_FILENO); 
+        dup2(save_in, STDIN_FILENO); 
 
         // handle next command 
         cmd = next; 

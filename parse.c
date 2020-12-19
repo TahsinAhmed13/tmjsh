@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-#include <fcntl.h>
+
+#include "parse.h"
 
 char * trim_front(char *str)
 {
@@ -51,24 +51,4 @@ char ** parse_args(char *cmd)
     argsv[i] = NULL; 
 
     return argsv; 
-}
-
-int redirect(char *cmd)
-{
-    int save = dup(STDOUT_FILENO);  
-    if(strchr(cmd, '>'))
-    {
-        char *file = cmd; 
-        cmd = strsep(&file, ">"); 
-        file = trim(file); 
-        int fd = open(file, O_WRONLY | O_CREAT, 0644); 
-        dup2(fd, STDOUT_FILENO); 
-    }
-    return save; 
-}
-
-void reset(int save)
-{
-    close(STDOUT_FILENO); 
-    dup2(save, STDOUT_FILENO); 
 }
