@@ -51,8 +51,10 @@ int main()
         {
             proc = fork(); 
             if(proc)
+            {
                 // parent
-                wait(&status); 
+                waitpid(proc, &status, 0); 
+            }
             else 
             {
                 // child
@@ -64,8 +66,8 @@ int main()
         free(argsv); 
 
         // undo redirection stream
-        dup2(save_out, STDOUT_FILENO); 
         dup2(save_in, STDIN_FILENO); 
+        dup2(save_out, STDOUT_FILENO); 
 
         // undo piping
         dup2(save_pipe, STDIN_FILENO); 

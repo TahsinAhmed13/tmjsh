@@ -43,7 +43,7 @@ int redirect_in(char *cmd)
 int exec_pipe(char ** cmd)
 {
     int save = dup(STDIN_FILENO); 
-    char * sub = strsep(cmd, "|"); 
+    char *sub = strsep(cmd, "|"); 
     if(*cmd)
     {
         FILE * fptr = popen(sub, "r"); 
