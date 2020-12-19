@@ -22,9 +22,11 @@ int main()
         if(!cmd)    // no command in buffer
         {
             printf("\n%s ", get_prompt());  
+
             fgets(buffer, CMD_SIZE, stdin);  
             if(strchr(buffer, '\n'))
                 *strchr(buffer, '\n') = 0; 
+
             cmd = buffer; 
         }
 
@@ -32,12 +34,17 @@ int main()
         char * next = cmd; 
         cmd = strsep(&next, ";"); 
 
+        // execute piped commands
+        int save_pipe = exec_pipe(&cmd); 
+
         // setup redirection stream
         int save_out = redirect_out(cmd); 
         int save_in = redirect_in(cmd); 
 
-        // parse and execute 
+        // parse
         char ** argsv = parse_args(cmd);
+        
+        // execute
         if(!strcmp(argsv[0], "exit"))
             return 0; 
         else 
@@ -59,6 +66,9 @@ int main()
         // undo redirection stream
         dup2(save_out, STDOUT_FILENO); 
         dup2(save_in, STDIN_FILENO); 
+
+        // undo piping
+        dup2(save_pipe, STDIN_FILENO); 
 
         // handle next command 
         cmd = next; 

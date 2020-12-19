@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "parse.h"
@@ -39,7 +40,7 @@ int num_args(char *cmd)
 char ** parse_args(char *cmd)
 {
     cmd = trim(cmd); 
-    int n = num_args(cmd);  
+    int n = num_args(cmd); 
     char ** argsv = (char **) malloc(sizeof(char *) * (n + 1));  
     
     int i = 0; 

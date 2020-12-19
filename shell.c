@@ -39,3 +39,18 @@ int redirect_in(char *cmd)
     }
     return save; 
 }
+
+int exec_pipe(char ** cmd)
+{
+    int save = dup(STDIN_FILENO); 
+    char * sub = strsep(cmd, "|"); 
+    if(*cmd)
+    {
+        FILE * fptr = popen(sub, "r"); 
+        int fd = fileno(fptr); 
+        dup2(fd, STDIN_FILENO);     
+    }
+    else 
+        *cmd = sub; 
+    return save; 
+}

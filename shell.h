@@ -1,6 +1,6 @@
 char *get_prompt(); 
 
-int redirect_out(char *cmd); 
-int redirect_in(char *cmd); 
+int redirect_out(char *); 
+int redirect_in(char *); 
 
-char * pipe_cmd(char **); 
+int exec_pipe(char **); 
