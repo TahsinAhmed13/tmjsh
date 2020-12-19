@@ -21,7 +21,8 @@ int main()
     {
         if(!cmd)    // no command in buffer
         {
-            printf("\n%s ", get_prompt());  
+            if(ftell(stdin) < 0)
+                printf("\n%s ", get_prompt());  
 
             fgets(buffer, CMD_SIZE, stdin);  
             if(strchr(buffer, '\n'))
@@ -42,11 +43,15 @@ int main()
         int save_in = redirect_in(cmd); 
 
         // parse
+        cmd = expand_path(cmd);   
         char ** argsv = parse_args(cmd);
         
         // execute
         if(!strcmp(argsv[0], "exit"))
             return 0; 
+        else if(!strcmp(argsv[0], "cd"))
+            if(argsv[1])    chdir(argsv[1]); 
+            else            chdir(getenv("HOME")); 
         else 
         {
             proc = fork(); 
@@ -63,6 +68,7 @@ int main()
                 return 0; 
             }
         }
+        free(cmd); 
         free(argsv); 
 
         // undo redirection stream
