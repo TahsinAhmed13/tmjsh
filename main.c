@@ -7,8 +7,18 @@
 
 #include "parse.h"
 #include "shell.h"
+#include "color.h"
 
 #define CMD_SIZE 256
+
+char *PROMPT_COLORS[6] = {
+    ANSI_RED, 
+    ANSI_YELLOW, 
+    ANSI_GREEN, 
+    ANSI_BLUE, 
+    ANSI_PURPLE, 
+    ANSI_WHITE
+}; 
 
 int main()
 {
@@ -22,7 +32,11 @@ int main()
         if(!cmd)    // no command in buffer
         {
             if(ftell(stdin) < 0)
-                printf("\n%s ", get_prompt());  
+            {
+                char *prompt = get_prompt(PROMPT_COLORS); 
+                printf("\n%s ", prompt);  
+                free(prompt); 
+            }
 
             fgets(buffer, CMD_SIZE, stdin);  
             if(strchr(buffer, '\n'))

@@ -3,36 +3,85 @@
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <pwd.h>
 
 #include "shell.h"
 #include "parse.h"
+#include "color.h"
+
+#define PATH_MAX 80
+
+char * replace(char *str, char *p1, char *p2)
+{
+    int sz = strlen(str); 
+    int len1 = strlen(p1); 
+    int len2 = strlen(p2); 
+
+    char *rep = (char *) malloc(sizeof(char) * (sz+1));
+    rep[0] = 0; 
+
+    char *last = str; 
+    char *next = strstr(str, p1); 
+    while(next)
+    {
+        sz += len2 - len1; 
+        rep = (char *) realloc(rep, sizeof(char) * (sz+1)); 
+        strncat(rep, last, next - last); 
+        strcat(rep, p2); 
+        last = next + len1;         
+        next = strstr(last, p1); 
+    }
+    strcat(rep, last); 
+
+    return rep; 
+}
 
 char * expand_path(char *path)
 {
-    int sz = strlen(path); 
-    char *home = getenv("HOME"); 
-    int home_len = strlen(home); 
-    char *e_path = (char *) malloc(sizeof(char) * (sz+1));  
-    e_path[0] = 0; 
-
-    char *last = path; 
-    char *tilda = strchr(path, '~'); 
-    while(tilda)
-    {
-        sz += home_len; 
-        e_path = (char *) realloc(e_path, sizeof(char) * (sz+1)); 
-        strncat(e_path, last, tilda-last);  
-        strcat(e_path, home); 
-        last = tilda + 1; 
-        tilda = strchr(last, '~'); 
-    }
-    strcat(e_path, last); 
-    return e_path; 
+    return replace(path, "~", getpwuid(getuid())->pw_dir); 
 }
 
-char * get_prompt()
+char * shorten_path(char *path)
 {
-    return "$"; 
+    return replace(path, getpwuid(getuid())->pw_dir, "~"); 
+}
+
+char * get_last_dir(char *path)
+{
+    char *end = path + strlen(path) - 1; 
+    while(end != path && *end != '/')
+        --end; 
+    if(end == path) return end; 
+    else            return end+1; 
+}
+
+char * get_prompt(char *colors[6])
+{
+    char *user = getpwuid(getuid())->pw_name; 
+
+    char host[_SC_HOST_NAME_MAX]; 
+    gethostname(host, sizeof(host));  
+
+    char cwd[PATH_MAX]; 
+    getcwd(cwd, sizeof(cwd)); 
+    char *scwd = shorten_path(cwd); 
+    char *dir = get_last_dir(scwd); 
+
+    // 5 extra characters + 8 ansi codes
+    int sz = strlen(user) + strlen(host) + strlen(dir) + 5 + (CODE_SIZE * 8);       
+    char *prompt = (char *) malloc(sizeof(char) * (sz+1));  
+    sprintf(prompt, "%s[%s%s%s@%s%s %s%s%s]%s$%s", 
+        colors[0],          // bracket color 
+        colors[1], user,    // user color 
+        colors[2],          // @ color 
+        colors[3], host,    // host color 
+        colors[4], dir,     // dir color 
+        colors[0],          // brack color
+        colors[5],          // $ color 
+        ANSI_RESET);        // reset 
+    free(scwd); 
+
+    return prompt; 
 }
 
 int redirect_out(char *cmd)
