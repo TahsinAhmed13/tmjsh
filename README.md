@@ -17,7 +17,7 @@ Team tmjsh
 ### Attempted:
 - These functionalities were tested but not considered complete (or was removed)
   - Generalized redirection (ordering of redirection not mattering)
-    - Attempted through the creation of a general link struct over\
+    - Attempted through the creation of a general link struct over
     the specific functions that redirects in and out.
     - Tried to use a stack to store redirections but had difficult parsing it
   - Chain piping did not work
@@ -25,12 +25,12 @@ Team tmjsh
 ---
 
 ### Bugs:
-- If you don't give a command and just press enter, it will still try to run a command.
-  - In a similar fashion, chaining semicolons (;) will not produce a parse error./
-    The shell will attempt to run whitespace as a command.
+- Just pressing enter gives a seg fault.
+- Having semicolons bu no argument gives a seg fault.
 - If you attempt to chain a redirection that has the same direction, the program assumes that you are redirecting to the entire latter part (e.g. ls > hi > there will result a redirection to "hi > there").
 	- The same thing happens if you try to chain more than two redirections.
-  - The same thing also happens if you try to pipe in the form of a > b < c
+  - The same thing also happens if you try to pipe in the form of a > b < c.
+	- If you do "hi < ls > bye," then the program makes a file ls
 - If you try to cd into a directory that doesn't exist, it won't tell you that the directory doesn't exist.
 - If you try to chain pipes, the program will tell you that the arguments are files that do not exist.
 - Not all commands are usable (e.g. "repeat" doesn't work).
