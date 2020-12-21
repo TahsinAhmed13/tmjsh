@@ -25,8 +25,6 @@ Team tmjsh
 ---
 
 ### Bugs:
-- Just pressing enter gives a seg fault.
-- Having semicolons bu no argument gives a seg fault.
 - If you attempt to chain a redirection that has the same direction, the program assumes that you are redirecting to the entire latter part (e.g. ls > hi > there will result a redirection to "hi > there").
 	- The same thing happens if you try to chain more than two redirections.
   - The same thing also happens if you try to pipe in the form of a > b < c.
