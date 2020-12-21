@@ -11,6 +11,8 @@
 
 #define PATH_MAX 80
 
+/* Finds the occurences of string p1 in the string str, then
+   concatenates a version of string str in which p1 is replaced by p2 */
 char * replace(char *str, char *p1, char *p2)
 {
     int sz = strlen(str); 
@@ -36,25 +38,31 @@ char * replace(char *str, char *p1, char *p2)
     return rep; 
 }
 
+/* Replace "~" with the full name of the
+    initial working directory of the user */
 char * expand_path(char *path)
 {
     return replace(path, "~", getpwuid(getuid())->pw_dir); 
 }
 
+/* Replace the full name of the initial
+   working directory to a "~" */
 char * shorten_path(char *path)
 {
     return replace(path, getpwuid(getuid())->pw_dir, "~"); 
 }
 
+/* */
 char * get_last_dir(char *path)
 {
     char *end = path + strlen(path) - 1; 
     while(end != path && *end != '/')
-        --end; 
+        --end;
     if(end == path) return end; 
     else            return end+1; 
 }
 
+/* Gets and returns the prompt */
 char * get_prompt(char *colors[6])
 {
     char *user = getpwuid(getuid())->pw_name; 
@@ -84,6 +92,7 @@ char * get_prompt(char *colors[6])
     return prompt; 
 }
 
+/* Sets up the redirection stream for "<" */
 int redirect_out(char *cmd)
 {
     int save = dup(STDOUT_FILENO);  
@@ -99,6 +108,7 @@ int redirect_out(char *cmd)
     return save; 
 }
 
+/* Sets up the redirection stream for ">" */
 int redirect_in(char *cmd)
 {
     int save = dup(STDIN_FILENO);  
@@ -114,6 +124,7 @@ int redirect_in(char *cmd)
     return save; 
 }
 
+/* Executes piping if the command contains a pipe */
 int exec_pipe(char ** cmd)
 {
     int save = dup(STDIN_FILENO); 

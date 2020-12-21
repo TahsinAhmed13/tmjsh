@@ -110,6 +110,13 @@ Team tmjsh
   working directory to a tilda
   ====================*/
 
+
+  /*======== char * get_last_dir() ==========
+  Inputs:  char *path
+  Returns: The last directory in the path
+
+  ====================*/
+
   
   /*======== char * get_prompt() ==========
   Inputs:  None
@@ -148,3 +155,6 @@ Team tmjsh
 ### main.c
 - Handles the reading, forking, and execution of commands
 - Also implements the features of the other file including parsing, piping, and redirecting
+
+### color.h
+- Makes for a better stylistic prompt
