@@ -3,12 +3,12 @@ by Tahsin Ahmed, Michael Hu, and Jin cheng Zhang
 Team tmjsh
 
 ### Features:
-- Forks and executes commands
-    - Allows change in workkng directory using cd
-    - You will never be stuck forever with the exit command
+- Forks and executes commands.
+    - Allows change in working directory using cd.
+    - You will never be stuck forever with the exit command!
 - Parses multiple commands on a single line
-- Can redirect with > and <
-- Allows for simple pipes with |
+- Can redirect with > and <.
+- Allows for simple pipes with |.
 
 ---
 
@@ -28,7 +28,8 @@ Team tmjsh
   ```
   /*======== char * trim_front() ==========
   Inputs:  char *str
-  Returns: Pointer to first character following str that is not a whitespace
+  Returns: Pointer to first character in string str that
+  is not a whitespace
 
   Removes leading whitespace on the string str
   ====================*/
@@ -36,19 +37,21 @@ Team tmjsh
   
   /*======== char * trim_back() ==========
   Inputs:  char *str
-  Returns: Pointer to the beginning of str
+  Returns: Pointer to the beginning of the string (original
+  pointer)
 
-  Removes trailing whitespace on the string str
-  A terminator is placed at the end
+  Removes trailing whitespace on the string str and places
+  a terminator at the end
   ====================*/
 
 
   /*======== char * trim() ==========
   Inputs:  char *str
-  Returns: Pointer to first character following str that is not a whitespace
+  Returns: Pointer to first character on the string str that
+  is not a whitespace
 
   Removes leading and trailing whitespace on the string str
-  A terminator is placed at the end
+  and places a terminator at the end
   ====================*/
 
 
@@ -65,7 +68,7 @@ Team tmjsh
   /*======== char ** parse_args() ==========
   Inputs:  char *cmd
   Returns: Array of strings where each entry is an argument
-  separated by a whitespace
+  separated by a whitespace from the string cmd
 
   Uses trim() to trim cmd
   Uses num_args() to dynamically allocate memory for the returned array.
@@ -75,21 +78,41 @@ Team tmjsh
   ```
 
 ### shell.c
-- Handles prompt display and certain shell function like redirection and piping
+- Handles prompt display and certain shell functions like redirection and piping
 ```
+  /*======== char * replace() ==========
+  Inputs: char *str
+          char *p1
+          char *p2
+  Returns: A string in which occurrences of string p1 are replaced by
+  string p2
+
+  Uses different string functions to find the occurences of string p1 in 
+  the string str, then concatenating a version of string str in which p1
+  is replaced by p2 
+  ====================*/
+
   /*======== char * expand_path() ==========
   Inputs:  char *path
-  Returns: 
+  Returns: A string of the full path
 
-
+  Uses replace() to replace the tilda with the 
+  full name of the initial working directory of the user
   ====================*/
-  
+
+  /*======== char * shorten_path() ==========
+  Inputs:  char *path
+  Returns: A string of the shortened path of the string path 
+
+  Uses replace() to replace the full name of the initial 
+  working directory to a tilda
+  ====================*/
   
   /*======== char * get_prompt() ==========
   Inputs:  None
   Returns: "$"
 
-  Returns the prompt
+  Gets and returns the prompt
   ====================*/
 
 
@@ -97,7 +120,8 @@ Team tmjsh
   Inputs:  char *cmd
   Returns: A save of the file descriptor of STDOUT
 
-
+  Sets up the redirection stream for "<" by using dup2()  
+  to refer to the redirected file
   ====================*/
   
   
@@ -105,7 +129,8 @@ Team tmjsh
   Inputs:  char *cmd
   Returns: A save of the file descriptor of STDIN
 
-
+  Sets up the redirection stream for ">" by using dup2()
+  to refer to the redirected file
   ====================*/
   
   
@@ -113,7 +138,7 @@ Team tmjsh
   Inputs:  char ** cmd
   Returns: A save of the file descriptor of STDIN
 
-
+  Executes piping if the command contains a pipe
   ====================*/
   ```
 
