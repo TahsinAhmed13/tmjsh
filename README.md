@@ -18,8 +18,12 @@ Team tmjsh
 ---
 
 ### Bugs:
-- If you don't give a command and just press enter, it will still
-try to run a command.
+- If you don't give a command and just press enter, it will still try to run a command.
+- If you attempt to chain a redirection that has the same direction, the program assumes that you are redirecting to the entire latter part (e.g. ls > hi > there will result a redirection to "hi > there").
+	- The same thing happens if you try to chain more than two redirections.
+- If you try to cd into a directory that doesn't directoy, it won't tell you that the directory doesn't exist.
+- If you try to chain pipes, the program will tell you that the arguments are files that do not exist.
+- Not all commands are usable (e.g. "repeat" doesn't work).
 
 ---
 
