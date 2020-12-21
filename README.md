@@ -92,6 +92,7 @@ Team tmjsh
   is replaced by p2 
   ====================*/
 
+
   /*======== char * expand_path() ==========
   Inputs:  char *path
   Returns: A string of the full path
@@ -100,6 +101,7 @@ Team tmjsh
   full name of the initial working directory of the user
   ====================*/
 
+
   /*======== char * shorten_path() ==========
   Inputs:  char *path
   Returns: A string of the shortened path of the string path 
@@ -107,6 +109,7 @@ Team tmjsh
   Uses replace() to replace the full name of the initial 
   working directory to a tilda
   ====================*/
+
   
   /*======== char * get_prompt() ==========
   Inputs:  None
