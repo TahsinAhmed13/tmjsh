@@ -19,8 +19,8 @@ Team tmjsh
   - Generalized redirection (ordering of redirection not mattering)
     - Attempted through the creation of a general link struct over\
     the specific functions that redirects in and out.
+    - Tried to use a stack to store redirections but had difficult parsing it
   - Chain piping did not work
-  - Ignoring middle whitespaces (now reimplemented, might be prone to bugs)
 
 ---
 

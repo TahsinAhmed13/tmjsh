@@ -100,7 +100,11 @@ int redirect_out(char *cmd)
     {
         char *file = cmd; 
         cmd = strsep(&file, ">"); 
+        
         file = trim(file); 
+        if(!file[0])
+            return -1; 
+
         int fd = open(file, O_WRONLY | O_CREAT, 0644); 
         dup2(fd, STDOUT_FILENO); 
         close(fd); 
@@ -116,7 +120,11 @@ int redirect_in(char *cmd)
     {
         char *file = cmd; 
         cmd = strsep(&file, "<"); 
+
         file = trim(file); 
+        if(!file[0])
+            return -1; 
+
         int fd = open(file, O_RDONLY | O_CREAT, 0644); 
         dup2(fd, STDIN_FILENO); 
         close(fd); 

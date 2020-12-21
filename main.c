@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
+#include <pwd.h>
 #include <sys/wait.h>
 
 #include "parse.h"
@@ -31,7 +32,7 @@ int main()
     {
         if(!cmd)    // no command in buffer
         {
-            if(ftell(stdin) < 0)
+            if(ftell(stdin) < 0) // no input in stdin, show prompt
             {
                 char *prompt = get_prompt(PROMPT_COLORS); 
                 printf("\n%s ", prompt);  
@@ -55,6 +56,12 @@ int main()
         // setup redirection stream
         int save_out = redirect_out(cmd); 
         int save_in = redirect_in(cmd); 
+        if(save_out < 0 || save_in < 0)
+        {
+            printf("tmjsh:\tsyntax error\n"); 
+            cmd = NULL; 
+            continue; 
+        }
 
         // parse
         cmd = expand_path(cmd);   
@@ -65,8 +72,8 @@ int main()
             return 0; 
         else if(!strcmp(argsv[0], "cd"))
             if(argsv[1])    chdir(argsv[1]); 
-            else            chdir(getenv("HOME")); 
-        else 
+            else            chdir(getpwuid(getuid())->pw_dir); 
+        else if(argsv[0][0])    // has some other command
         {
             proc = fork(); 
             if(proc)

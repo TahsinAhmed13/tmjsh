@@ -33,13 +33,16 @@ char * trim(char *str)
 /* Counts the number of times a whitespace appears in the string cmd */
 int num_args(char *cmd)
 {
+    cmd = trim(cmd); 
+    ++cmd; 
+
     int args = 0; 
     while(*cmd)
     {
-        if(*cmd == ' ') ++args; 
-        while(*cmd == ' ') ++cmd; 
-
-        ++cmd;
+        // only count non consecutive spaces
+        if(*cmd == ' ' && *(cmd-1) != ' ') 
+            ++args; 
+        ++cmd; 
     }
     return args + 1; 
 }
@@ -56,9 +59,10 @@ char ** parse_args(char *cmd)
     {
         while(*cmd == ' ') cmd++;
         argsv[i] = strsep(&cmd, " "); 
-        ++i;
+        if(argsv[i][0]) // not empty
+            ++i; 
     }
-    argsv[i] = NULL; 
+    argsv[n] = NULL; 
 
     return argsv; 
 }
