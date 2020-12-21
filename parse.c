@@ -8,19 +8,19 @@
 char * trim_front(char *str)
 {
     while(*str == ' ')
-        ++str; 
-    return str; 
+        ++str;
+    return str;
 }
 
 /* Removes trailing whitespace on the string str */
 char * trim_back(char *str)
 {
-    char *tmp = str; 
-    tmp += strlen(str) - 1; 
+    char *tmp = str;
+    tmp += strlen(str) - 1;
     while(*tmp == ' ')
-        --tmp; 
-    *(tmp + 1) = 0; 
-    return str; 
+        --tmp;
+    *(tmp + 1) = 0;
+    return str;
 }
 
 /* Removes both leading and trailing whitespace on

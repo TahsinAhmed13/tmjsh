@@ -18,7 +18,8 @@ Team tmjsh
 ---
 
 ### Bugs:
-- 
+- If you don't give a command and just press enter, it will still
+try to run a command.
 
 ---
 
@@ -115,6 +116,8 @@ Team tmjsh
   Inputs:  char *path
   Returns: The last directory in the path
 
+  This allows so that the prompt always show the last part
+  of the CWD
   ====================*/
 
   
@@ -158,3 +161,4 @@ Team tmjsh
 
 ### color.h
 - Makes for a better stylistic prompt
+- Adapted from Tahsin's favorite Youtuber's bash prompt
