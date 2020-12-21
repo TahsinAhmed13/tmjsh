@@ -55,9 +55,8 @@ char ** parse_args(char *cmd)
     char ** argsv = (char **) malloc(sizeof(char *) * (n + 1));  
     
     int i = 0; 
-    while(i < n)
+    while(cmd)
     {
-        while(*cmd == ' ') cmd++;
         argsv[i] = strsep(&cmd, " "); 
         if(argsv[i][0]) // not empty
             ++i; 
