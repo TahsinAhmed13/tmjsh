@@ -37,7 +37,9 @@ int num_args(char *cmd)
     while(*cmd)
     {
         if(*cmd == ' ') ++args; 
-        ++cmd; 
+        while(*cmd == ' ') ++cmd; 
+
+        ++cmd;
     }
     return args + 1; 
 }
@@ -46,14 +48,15 @@ int num_args(char *cmd)
 char ** parse_args(char *cmd)
 {
     cmd = trim(cmd); 
-    int n = num_args(cmd); 
+    int n = num_args(cmd);
     char ** argsv = (char **) malloc(sizeof(char *) * (n + 1));  
     
     int i = 0; 
-    while(cmd)
+    while(i < n)
     {
+        while(*cmd == ' ') cmd++;
         argsv[i] = strsep(&cmd, " "); 
-        ++i; 
+        ++i;
     }
     argsv[i] = NULL; 
 
